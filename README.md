@@ -2,7 +2,7 @@
 
 <img src="https://github.com/Psingh12354/Google-Cloud-/blob/main/Qwik.png" width=100 height=100></img>
 
-<h3 align=center><i><b><u>Welcome! to the Qwicklab</u></b></i></h3>
+<h3 align=center><i><b>Welcome! to the Qwicklab</b></i></h3>
 
 ### Go to qwiklab here [click me](https://google.qwiklabs.com/)
 
