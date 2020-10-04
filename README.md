@@ -1,5 +1,7 @@
 <h1 align=center><i><b>Google Cloud</b></i></h1>
 
+### Go to qwiklab here [click me](https://google.qwiklabs.com/)
+
 ### About Navigation
 
 The **Navigation menu** is an important component of the Cloud Console—it offers quick access to the platform's services and also outlines its offerings. If you scroll through the menu, you will see that there are seven categories of Google Cloud services:
