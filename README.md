@@ -1,5 +1,7 @@
 <h1 align=center><i><b>Google Cloud</b></i></h1>
 
+![](https://github.com/Psingh12354/Google-Cloud-/blob/main/Qwik.png=250x250)
+
 ### Go to qwiklab here [click me](https://google.qwiklabs.com/)
 
 ### About Navigation
