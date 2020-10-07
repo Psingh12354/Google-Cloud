@@ -89,7 +89,7 @@ Certain Compute Engine resources live in regions or zones. A region is a specifi
 
 Resources that live in a zone are referred to as zonal resources. Virtual machine Instances and persistent disks live in a zone. To attach a persistent disk to a virtual machine instance, both resources must be in the same zone. Similarly, if you want to assign a static IP address to an instance, the instance must be in the same region as the static IP.
 
-## Create a new instance from the Cloud Console
+### Create a new instance from the Cloud Console
 
 In this section, you'll learn how to create new pre-defined machine types with Compute Engine from the Cloud Console.
 
