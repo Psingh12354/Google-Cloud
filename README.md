@@ -288,7 +288,7 @@ student_03_c58135da19e3@cloudshell:~$
 ### Use this :
 
 ```
-gcloud config set command <Project_ID>
+gcloud config set command <Project_ID> //command can be project or something else with id 
 ```
 
 - The name of the vm is "gcelab2",
