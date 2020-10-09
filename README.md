@@ -258,7 +258,8 @@ echo $PROJECT_ID
 echo $ZONE
 ```
 
-## Create a virtual machine with gcloud
+<h2 align=center><i><b>Create a virtual machine with gcloud</b></i></h2>
+
 Create a new virtual machine instance using ```gcloud```. In the following command you'll use:
 
 ```gcloud compute``` which enables you to easily manage your Compute Engine resources in a friendlier format than using the Compute Engine API.
@@ -268,7 +269,8 @@ Run the following to create your vm:
 ```
 gcloud compute instances create gcelab2 --machine-type n1-standard-2 --zone $ZONE
 ```
-### v vIf you got a error : 
+### If you got a error : 
+
 ```
 ERROR: (gcloud.compute.instances.create) The required property [project] is not currently set.
 You may set it for your current workspace by running:
