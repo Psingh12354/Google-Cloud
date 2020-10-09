@@ -289,6 +289,9 @@ student_03_c58135da19e3@cloudshell:~$
 
 ```
 gcloud config set command <Project_ID> //command can be project or something else with id 
+like -:: 
+gcloud config set  project qwiklabs-gcp-00-4b2e8b079910
+
 ```
 
 - The name of the vm is "gcelab2",
@@ -429,3 +432,166 @@ vi ./.bashrc
 ```
 
 The editor opens and displays the contents of the file. Press the ```ESC``` key and then ```:wq``` to exit the editor.
+
+
+<h1><i><b>Kubernetes Engine: Qwik Start</b></i></h1>
+
+You can list the active account name with this command:
+
+```
+gcloud auth list
+```
+
+(Output)
+
+```
+Credentialed accounts:
+ - <myaccount>@<mydomain>.com (active)
+```
+(Example output)
+```
+Credentialed accounts:
+ - google1623327_student@qwiklabs.net
+```
+You can list the project ID with this command:
+```
+gcloud config list project
+```
+(Output)
+```
+[core]
+project = <project_ID>
+```
+(Example output)
+```
+[core]
+project = qwiklabs-gcp-44776a13dea667a6
+```
+
+## Setting a default compute zone
+Your compute zone is an approximate regional location in which your clusters and their resources live. For example, us-central1-a is a zone in the us-central1 region.
+
+Start a new session in Cloud Shell and run the following command to set your default compute zone to us-central1-a:
+
+gcloud config set compute/zone us-central1-a
+
+You receive the following output:
+
+Updated property [compute/zone].
+Creating a Kubernetes Engine cluster
+A cluster consists of at least one cluster master machine and multiple worker machines called nodes. Nodes are Compute Engine virtual machine (VM) instances that run the Kubernetes processes necessary to make them part of the cluster.
+
+To create a cluster, run the following command, replacing [CLUSTER-NAME] with the name you choose for the cluster (for example my-cluster). Cluster names must start with a letter, end with an alphanumeric, and cannot be longer than 40 characters.
+
+```
+gcloud container clusters create [CLUSTER-NAME]
+```
+You can ignore any warnings in the output. It might take several minutes to finish creating the cluster. Soon after you should receive a similar output:
+```
+NAME        LOCATION       ...   NODE_VERSION  NUM_NODES  STATUS
+my-cluster  us-central1-a  ...   1.15.12-gke.2  3          RUNNING
+```
+
+## Creating a Kubernetes Engine cluster
+
+A [cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture) consists of at least one cluster master machine and multiple worker machines called nodes. Nodes are [Compute Engine virtual machine (VM) instances](https://cloud.google.com/compute/docs/instances/) that run the Kubernetes processes necessary to make them part of the cluster.
+
+To create a cluster, run the following command, replacing ```[CLUSTER-NAME]``` with the name you choose for the cluster (for example ```my-cluster```). Cluster names must start with a letter, end with an alphanumeric, and cannot be longer than 40 characters.
+
+### Important
+
+```
+gcloud config set  project qwiklabs-gcp-00-4b2e8b079910
+```
+
+```
+gcloud container clusters create [CLUSTER-NAME]
+```
+
+You can ignore any warnings in the output. It might take several minutes to finish creating the cluster. Soon after you should receive a similar output:
+
+```
+NAME        LOCATION       ...   NODE_VERSION  NUM_NODES  STATUS
+my-cluster  us-central1-a  ...   1.15.12-gke.2  3          RUNNING
+```
+
+## Get authentication credentials for the cluster
+
+After creating your cluster, you need to get authentication credentials to interact with the cluster.
+
+To authenticate the cluster run the following command, replacing ```[CLUSTER-NAME]``` with the name of your cluster:
+
+```
+gcloud container clusters get-credentials [CLUSTER-NAME]
+```
+
+You should receive a similar output:
+```
+Fetching cluster endpoint and auth data.
+kubeconfig entry generated for my-cluster.
+```
+
+## Deploying an application to the cluster
+Now that you have created a cluster, you can deploy a containerized application to it. For this lab you'll run ```hello-app``` in your cluster.
+
+Kubernetes Engine uses Kubernetes objects to create and manage your cluster's resources. Kubernetes provides the Deployment object for deploying stateless applications like web servers. Service objects define rules and load balancing for accessing your application from the Internet.
+
+Run the following [kubectl create](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create) command in Cloud Shell to create a new Deployment ```hello-server``` from the ```hello-app```container image:
+
+```
+kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
+```
+
+You should receive the following output:
+```
+deployment.apps/hello-server created
+```
+
+This Kubernetes command creates a Deployment object that represents hello-server. In this case, --image specifies a container image to deploy. The command pulls the example image from a Google Container Registry bucket. gcr.io/google-samples/hello-app:1.0 indicates the specific image version to pull. If a version is not specified, the latest version is used.
+
+Now create a Kubernetes Service, which is a Kubernetes resource that lets you expose your application to external traffic, by running the following kubectl expose command:
+
+kubectl expose deployment hello-server --type=LoadBalancer --port 8080
+
+In this command:
+
+- ```--port specifies``` the port that the container exposes.
+- ```type="LoadBalancer"``` creates a Compute Engine load balancer for your container.
+You should receive the following output:
+
+```
+service/hello-server exposed
+```
+Inspect the hello-server Service by running kubectl get:
+```
+kubectl get 
+```
+You should receive a similar output:
+
+![](https://github.com/Psingh12354/Google-Cloud/blob/main/out1.png)
+
+```
+Note: It might take a minute for an external IP address to be generated. Run the above command again if the EXTERNAL-IP column is in "pending" status.
+```
+From this command's output, copy the Service's external IP address from the ```EXTERNAL IP``` column.
+
+View the application from your web browser using the external IP address with the exposed port:
+
+```
+http://[EXTERNAL-IP]:8080
+```
+Your page should resemble the following:
+
+![](https://github.com/Psingh12354/Google-Cloud/blob/main/out2.png)
+
+## Clean Up
+
+Run the following to delete the cluster:
+
+```
+gcloud container clusters delete [CLUSTER-NAME]
+```
+
+When prompted, type Y to confirm. Deleting the cluster can take a few minutes. For more information on deleted Google Kubernetes Engine clusters, view the documentation.
+
+Click Check my progress to 
