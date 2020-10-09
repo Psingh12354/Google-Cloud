@@ -228,7 +228,8 @@ After connecting, you disconnect from SSH by exiting from the remote shell:
 ```
 exit
 ```
-# Getting Started with Cloud Shell & gcloud
+
+<h1 align=center><i><b>Getting Started with Cloud Shell & gcloud</b></i></h1>
 
 ### Project Id
 
@@ -237,6 +238,7 @@ gcloud compute project-info describe --project <your_project_ID>
 ```
 
 ## Setting environment variables
+
 Environment variables are variables that define your environment. Define your own variables and save yourself time when writing scripts that contain APIs or executables.
 
 Make a couple of environment variables:
@@ -258,7 +260,7 @@ echo $PROJECT_ID
 echo $ZONE
 ```
 
-<h2 align=center><i><b>Create a virtual machine with gcloud</b></i></h2>
+## Create a virtual machine with gcloud
 
 Create a new virtual machine instance using ```gcloud```. In the following command you'll use:
 
@@ -269,6 +271,10 @@ Run the following to create your vm:
 ```
 gcloud compute instances create gcelab2 --machine-type n1-standard-2 --zone $ZONE
 ```
+(Output)
+
+![](https://github.com/Psingh12354/Google-Cloud/blob/main/outputgit.png)
+
 ### If you got a error : 
 
 ```
