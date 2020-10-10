@@ -899,3 +899,179 @@ nginx-lb   us-central1  X.X.X.X       TCP         us-central1/....
 Take note of the http-content-rule IP_ADDRESS for the forwarding rule.
 
 From the browser, you should be able to connect to ```http://IP_ADDRESS/```. It may take three to five minutes. If you do not connect, wait a minute then reload the browser.
+
+<h1 align=center><b><i>Getting Started: Create and Manage Cloud Resources: Challenge Lab</i></b></h1>
+
+## Challenge scenario
+You have started a new role as a Junior Cloud Engineer for Jooli Inc. You are expected to help manage the infrastructure at Jooli. Common tasks include provisioning resources for projects.
+
+You are expected to have the skills and knowledge for these tasks, so don't expect step-by-step guides to be provided.
+
+Some Jooli Inc. standards you should follow:
+
+Create all resources in the default region or zone, unless otherwise directed.
+Naming is normally team-resource, e.g. an instance could be named nucleus-webserver1
+Allocate cost effective resource sizes. Projects are monitored and excessive resource use will result in the containing project's termination (and possibly yours), so beware. This is the guidance the monitoring team is willing to share; unless directed use f1-micro for small Linux VMs and n1-standard-1 for Windows or other applications such as Kubernetes nodes.
+Your challenge
+As soon as you sit down at your desk and open your new laptop you receive several requests from the Nucleus team. Read through each description, then create the resources.
+
+## Task 1: Create a project jumphost instance
+
+We will use this instance to perform maintenance for the project.
+
+Make sure you:
+
+name the instance ```nucleus-jumphost```
+use the machine type of f1-micro
+use the default image type (Debian Linux)
+
+## Solution :
+
+```
+gcloud compute instances create nucleus-jumphost \
+                  --network nucleus-vpc \
+                  --zone us-east1-b  \
+                  --machine-type f1-micro  \
+                  --image-family debian-9  \
+                  --image-project debian-cloud \
+                  --scopes cloud-platform \
+                  --no-address
+                  
+                  Or 
+                  
+Navigation menu > Compute engine > VM Instance                  
+```
+
+## Task 2: Create a Kubernetes service cluster
+
+```
+You have a limit to the resources you are allowed to create in your project, if you don't get the result you expected please delete the cluster before you create another cluster or the lab might exit and you might get banned.
+The team is building an application that will use a service. This service will run on Kubernetes. You need to:
+```
+
+- Create a cluster (in the us-east1-b zone) to host the service
+- Use the Docker container hello-app (`gcr.io/google-samples/hello-app:2.0`) as a place holder, the team will replace the container with their own work later
+- Expose the app on port 8080
+
+### Solution(Each step one by one)
+```
+Create a Kubernetes service cluster
+
+gcloud config set compute/zone us-east1-b
+
+gcloud container clusters create nucleus-webserver1
+
+gcloud container clusters get-credentials nucleus-webserver1
+
+kubectl create deployment hello-app --image=gcr.io/google-samples/hello-app:2.0
+
+kubectl expose deployment hello-app --type=LoadBalancer --port 8080
+
+kubectl get service 
+```
+
+## Task 3: Setup an HTTP load balancer
+
+We will serve the site via nginx web servers, but we want to ensure we have a fault tolerant environment, so please create an HTTP load balancer with a managed instance group of **two nginx web servers**. Use the following to configure the web servers, the team will replace this with their own configuration later.
+
+```
+You have a limit to the resources you are allowed to create in your project, so do not create more than two instances in your managed instance group or the lab might exit and you might get banned.
+```
+
+```
+cat << EOF > startup.sh
+#! /bin/bash
+apt-get update
+apt-get install -y nginx
+service nginx start
+sed -i -- 's/nginx/Google Cloud Platform - '"\$HOSTNAME"'/' /var/www/html/index.nginx-debian.html
+EOF
+```
+
+You need to:
+
+- Create an instance template
+- Create a target pool
+- Create a managed instance group
+- Create a firewall rule to allow traffic (80/tcp)
+- Create a health check
+- Create a backend service and attach the manged instance group
+- Create a URL map and target HTTP proxy to route requests to your URL map
+- Create a forwarding rule
+
+ ### Solution(Step by step) : 
+ 
+ ```
+ 1 .Create an instance template :
+
+gcloud compute instance-templates create nginx-template \
+--metadata-from-file startup-script=startup.sh
+
+2 .Create a target pool :
+
+gcloud compute target-pools create nginx-pool
+```
+
+**Note :** Press No and select region which is given in you first question.
+
+```
+3 .Create a managed instance group :
+
+gcloud compute instance-groups managed create nginx-group \
+--base-instance-name nginx \
+--size 2 \
+--template nginx-template \
+--target-pool nginx-pool
+
+gcloud compute instances list
+
+4 .Create a firewall rule to allow traffic (80/tcp) :
+
+gcloud compute firewall-rules create www-firewall --allow tcp:80
+
+gcloud compute forwarding-rules create nginx-lb \
+--region us-east1 \
+--ports=80 \
+--target-pool nginx-pool
+
+gcloud compute forwarding-rules list
+
+5 .Create a health check :
+
+gcloud compute http-health-checks create http-basic-check
+
+gcloud compute instance-groups managed \
+set-named-ports nginx-group \
+--named-ports http:80
+
+6 .Create a backend service and attach the manged instance group :
+
+gcloud compute backend-services create nginx-backend \
+--protocol HTTP --http-health-checks http-basic-check --global
+
+gcloud compute backend-services add-backend nginx-backend \
+--instance-group nginx-group \
+--instance-group-zone us-east1-b \
+--global
+
+7 .Create a URL map and target HTTP proxy to route requests to your URL map :
+
+gcloud compute url-maps create web-map \
+--default-service nginx-backend
+
+gcloud compute target-http-proxies create http-lb-proxy \
+--url-map web-map
+
+8 .Create a forwarding rule :
+
+gcloud compute forwarding-rules create http-content-rule \
+--global \
+--target-http-proxy http-lb-proxy \
+--ports 80
+
+gcloud compute forwarding-rules list
+```
+![](https://github.com/Psingh12354/Google-Cloud/blob/main/final%20Output.PNG)
+
+**Note :** It may take certain time so do not close the qwiklab window wait and copy above 3 ip 
+           address and paste in in seprate windows and refresh it till you got the output(**can take more than a minutes**)
