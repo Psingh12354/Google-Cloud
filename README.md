@@ -1075,3 +1075,5 @@ gcloud compute forwarding-rules list
 
 **Note :** It may take certain time so do not close the qwiklab window wait and copy above 3 ip 
            address and paste in in seprate windows and refresh it till you got the output(**can take more than a minutes**)
+           
+ **Ctrl+Z** to quiz the cloud console in case not working
