@@ -1,6 +1,6 @@
 <h1 align=center><i><b>Google Cloud</b></i></h1>
 
-<img src="https://github.com/Psingh12354/Google-Cloud-/blob/main/Qwik.png" width=100 height=100></img>
+<p align=center><img src="https://github.com/Psingh12354/Google-Cloud-/blob/main/Qwik.png" width=100 height=100></img></p>
 
 <h3 align=center><i><b>Welcome! to the Qwicklab</b></i></h3>
 
